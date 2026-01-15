@@ -1,12 +1,24 @@
-# Claude Code Instructions
+# Todo App – Hackathon Phase II
 
-You are an autonomous coding agent.
+## Overview
+Spec-driven monorepo using GitHub Spec-Kit + Claude Code.
 
-Rules:
-- Follow the specification strictly
-- No manual coding by user
-- Use clean Python architecture
-- CLI interaction only
-- In-memory data storage
+## Specs Structure
+/specs/overview.md  
+/specs/features/  
+/specs/api/  
+/specs/database/  
+/specs/ui/  
 
+## Workflow
+Spec → Plan → Tasks → Claude Code implements  
+No manual coding.
+
+## Apps
+/frontend – Next.js  
+/backend – FastAPI  
+
+## Run
+Backend: cd backend && uvicorn main:app --reload  
+Frontend: cd frontend && npm run dev
 
