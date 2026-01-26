@@ -1,0 +1,9 @@
+from fastapi import APIRouter, Depends
+from services.auth import get_current_user
+
+router = APIRouter()
+
+@router.post("/api/tasks/")
+def create_task(task: dict, token: str = Depends(get_current_user)):
+    # Now you have the JWT in `token`
+    return {"task": task, "token_used": token}

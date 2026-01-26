@@ -1,23 +1,17 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from routes import tasks, auth
+from db import engine, Base
 
-from routes import tasks  # your tasks router
+app = FastAPI(title="Evolution-of-Todo Phase II")
 
-app = FastAPI(title="Hackathon Task App")
+@app.on_event("startup")
+async def on_startup():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
-# Allow frontend to talk to backend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # for hackathon simplicity
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.include_router(tasks.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 
-# Include routers
-app.include_router(tasks.router)
-
-# Root endpoint
 @app.get("/")
 def root():
-    return {"message": "Hackathon Task App Running!"}
+    return {"message": "Backend is running"}

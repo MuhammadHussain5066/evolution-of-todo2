@@ -1,23 +1,24 @@
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from datetime import datetime
+from db import Base
 
-class Task(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="user.id")
-    title: str
-    description: str = ""
-    completed: bool = False
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+class User(Base):
+    __tablename__ = "user"
 
-    owner: Optional["User"] = Relationship(back_populates="tasks")
-
-class User(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    email: str
-    password: str
-
-    tasks: list["Task"] = Relationship(back_populates="owner")
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
 
 
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    title = Column(String, nullable=False)
+    description = Column(String, default="")
+    completed = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
